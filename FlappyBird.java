@@ -69,6 +69,7 @@ public FlappyBird() {
     }
 
     public void actionPerformed(ActionEvent e) {
+        
 
         if(gameOver) return;
 
@@ -83,7 +84,7 @@ public FlappyBird() {
             score++;
         }
 
-        Rectangle bird = new Rectangle(100, birdY, 30, 30);
+        Rectangle bird = new Rectangle(100 + 5, birdY + 5, 20, 20);
         Rectangle topPipe = new Rectangle(pipeX,0,pipeWidth,pipeHeight);
         Rectangle bottomPipe = new Rectangle(pipeX, pipeHeight + gap, pipeWidth, 600);
 
