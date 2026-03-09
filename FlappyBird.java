@@ -8,13 +8,13 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     int birdY = 250;
     int velocity = 0;
-    int gravity = 1;
-
+    int gravity = 1;  
+    int jumpStrength = -12;
     int pipeX = 400;
     int gap = 150;
     int pipeWidth = 60;
     int pipeHeight;
-
+    int highScore = 0;
     int score = 0;
     boolean gameOver = false;
 
@@ -37,36 +37,43 @@ public FlappyBird() {
     timer.start();
 }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+   public void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-        g.setColor(Color.cyan);
-        g.fillRect(0,0,400,600);
-        g.setColor(new Color(34, 139, 34)); 
-        g.fillRect(pipeX, 0, pipeWidth, pipeHeight);
-        g.fillRect(pipeX, pipeHeight + gap, pipeWidth, 600);
+    
+    g.setColor(Color.cyan);
+    g.fillRect(0, 0, 400, 600);
 
-        g.setColor(Color.green); 
-        g.fillRect(pipeX + 5, 0, pipeWidth - 10, pipeHeight);
-        g.fillRect(pipeX + 5, pipeHeight + gap, pipeWidth - 10, 600);
+    
+    g.setColor(new Color(34, 139, 34)); 
+    g.fillRect(pipeX, 0, pipeWidth, pipeHeight);
+    g.fillRect(pipeX, pipeHeight + gap, pipeWidth, 600);
 
-        g.setColor(Color.yellow);
-       g.drawImage(birdImage, 100, birdY, 40, 40, null);
+    g.setColor(Color.green); 
+    g.fillRect(pipeX + 5, 0, pipeWidth - 10, pipeHeight);
+    g.fillRect(pipeX + 5, pipeHeight + gap, pipeWidth - 10, 600);
 
-        g.setColor(Color.green);
-        g.fillRect(pipeX,0,pipeWidth,pipeHeight);
+    
+    g.setColor(new Color(222, 184, 135)); 
+    g.fillRect(0, 550, 400, 50);
+    g.setColor(new Color(101, 67, 33)); 
+    g.fillRect(0, 550, 400, 5);
 
-        g.fillRect(pipeX, pipeHeight + gap, pipeWidth, 600);
+    
+    g.drawImage(birdImage, 100, birdY, 40, 40, null);
 
-        g.setColor(Color.black);
-        g.setFont(new Font("Arial", Font.BOLD, 25));
-        g.drawString("Score: " + score, 20, 40);
+    
+    g.setColor(Color.black);
+    g.setFont(new Font("Arial", Font.BOLD, 25));
+    g.drawString("Score: " + score, 20, 40);
 
-        if(gameOver){
-            g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Game Over", 110, 300);
-        }
+    if (gameOver) {
+        g.setFont(new Font("Arial", Font.BOLD, 40));
+        g.drawString("GAME OVER", 85, 300);
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString("Press SPACE to Restart", 95, 340);
     }
+}
 
     public void actionPerformed(ActionEvent e) {
         
@@ -79,11 +86,13 @@ public FlappyBird() {
         pipeX -= 5;
 
         if(pipeX < -pipeWidth){
-            pipeX = 400;
-            pipeHeight = rand.nextInt(200) + 100;
-            score++;
-        }
-
+    pipeX = 400;
+    pipeHeight = rand.nextInt(200) + 100;
+    score++;
+    if (score > highScore) {
+        highScore = score;
+    }
+}
         Rectangle bird = new Rectangle(100 + 5, birdY + 5, 20, 20);
         Rectangle topPipe = new Rectangle(pipeX,0,pipeWidth,pipeHeight);
         Rectangle bottomPipe = new Rectangle(pipeX, pipeHeight + gap, pipeWidth, 600);
@@ -115,5 +124,5 @@ public FlappyBird() {
 
     public static void main(String[] args) {
         new FlappyBird();
-    }
+    } 
 }
