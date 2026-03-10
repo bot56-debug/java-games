@@ -38,7 +38,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         timer.start();
     }
 
-    @Override
+    
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -123,7 +123,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             } else if (currentState == State.PLAYING) {
                 velocity = jumpStrength;
             } else if (currentState == State.GAMEOVER) {
-                // Reset Game
                 birdY = 250;
                 velocity = 0;
                 pipeX = 400;
