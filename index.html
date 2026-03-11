@@ -1,113 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Flappy Bird Web</title>
+    <title>Web Flappy Bird</title>
     <style>
-        body { 
-            margin: 0; 
-            background: #333; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            color: white;
-            font-family: Arial; 
-        }
-        canvas { 
-            border: 5px solid #222; 
-            background: cyan; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.5); 
-            max-width: 100%;
-            height: auto;
-        }
-        .ui-text { margin-bottom: 10px; }
+        body { text-align: center; background: #333; color: white; font-family: Arial; margin-top: 50px; }
+        canvas { border: 2px solid #000; background: cyan; display: block; margin: 20px auto; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
-    <div class="ui-text">Press <b>Space</b> or <b>Tap</b> to Jump</div>
-    <canvas id="gameCanvas"></canvas>
+    <h1>Flappy Bird Web</h1>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <p>Press <b>Space</b> or <b>Click</b> to Jump</p>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        canvas.width = 400; 
-        canvas.height = 600;
 
-        // Game Variables
-        let birdY = 250, velocity = 0, gravity = 0.6;
-        let pipeX = 400, pipeHeight = 200, gap = 150;
-        let score = 0, highScore = 0;
-        let state = "MENU"; // MENU, PLAYING, GAMEOVER
-
-        // Bird Image
-        const birdImg = new Image();
+        let birdY = 250, velocity = 0, gravity = 0.6, score = 0, highScore = 0;
+        let pipeX = 400, pipeHeight = 200, gap = 150, state = "MENU";
+        const birdImg = new Image(); 
         birdImg.src = "bird.png"; 
 
         function draw() {
-            // 1. Background
+            // Background
             ctx.fillStyle = "cyan";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (state === "MENU") {
                 ctx.fillStyle = "black";
-                ctx.font = "bold 40px Arial";
-                ctx.fillText("FLAPPY BIRD", 75, 200);
+                ctx.font = "bold 30px Arial";
+                ctx.fillText("FLAPPY BIRD", 100, 200);
                 ctx.font = "20px Arial";
-                ctx.fillText("Click or Space to Start", 100, 300);
-                if (birdImg.complete) ctx.drawImage(birdImg, 180, 240, 40, 40);
+                ctx.fillText("Click to Start", 140, 300);
+                if(birdImg.complete) ctx.drawImage(birdImg, 180, 240, 40, 40);
             } 
-            
             else if (state === "PLAYING") {
-                // Physics
                 velocity += gravity;
                 birdY += velocity;
                 pipeX -= 5;
 
-                // Pipe Reset
                 if (pipeX < -60) {
                     pipeX = 400;
                     pipeHeight = Math.random() * 200 + 100;
                     score++;
-                    if (score > highScore) highScore = score;
+                    if(score > highScore) highScore = score;
                 }
 
-                // Collision
-                if (birdY > canvas.height || birdY < 0 || 
-                   (pipeX < 140 && pipeX + 60 > 100 && (birdY < pipeHeight || birdY + 30 > pipeHeight + gap))) {
-                    state = "GAMEOVER";
-                }
-
-                // Draw Pipes
+                // Drawing Pipes
                 ctx.fillStyle = "green";
                 ctx.fillRect(pipeX, 0, 60, pipeHeight);
                 ctx.fillRect(pipeX, pipeHeight + gap, 60, canvas.height);
 
-                // Draw Bird
-                if (birdImg.complete && birdImg.naturalWidth !== 0) {
-                    ctx.drawImage(birdImg, 100, birdY, 40, 40);
-                } else {
-                    ctx.fillStyle = "yellow"; // Fallback if image fails
-                    ctx.fillRect(100, birdY, 40, 40);
-                }
+                // Drawing Bird
+                if(birdImg.complete) ctx.drawImage(birdImg, 100, birdY, 40, 40);
+                else { ctx.fillStyle = "yellow"; ctx.fillRect(100, birdY, 40, 40); }
 
-                // Draw Score
+                // Score
                 ctx.fillStyle = "white";
-                ctx.font = "bold 30px Arial";
+                ctx.font = "30px Arial";
                 ctx.fillText(score, 190, 50);
+
+                // Collision
+                if (birdY > canvas.height || birdY < 0 || (pipeX < 140 && pipeX + 60 > 100 && (birdY < pipeHeight || birdY + 30 > pipeHeight + gap))) {
+                    state = "GAMEOVER";
+                }
             } 
-            
             else if (state === "GAMEOVER") {
-                ctx.fillStyle = "rgba(0,0,0,0.6)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "rgba(0,0,0,0.5)";
+                ctx.fillRect(0,0,canvas.width,canvas.height);
                 ctx.fillStyle = "white";
-                ctx.font = "bold 40px Arial";
+                ctx.font = "40px Arial";
                 ctx.fillText("GAME OVER", 85, 250);
                 ctx.font = "20px Arial";
                 ctx.fillText("Score: " + score + " | Best: " + highScore, 110, 300);
-                ctx.fillText("Tap to Restart", 135, 350);
             }
-
             requestAnimationFrame(draw);
         }
 
@@ -120,12 +86,16 @@
             }
         }
 
-        window.addEventListener("keydown", (e) => { if (e.code === "Space") handleInput(); });
+       window.addEventListener("keydown", e => { if(e.code === "Space") handleInput(); });
         canvas.addEventListener("mousedown", handleInput);
-        canvas.addEventListener("touchstart", (e) => { e.preventDefault(); handleInput(); });
-
+        
         birdImg.onload = draw;
-        birdImg.onerror = draw; // Start even if image fails
+        birdImg.onerror = draw; // If image fails, start anyway
+        
+        draw(); // Force the game to start immediately
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
