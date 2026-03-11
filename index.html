@@ -16,7 +16,7 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        let birdY = 250, velocity = 0, gravity = 0.6, score = 0, highScore = 0;
+        let birdY = 250, velocity = 0, gravity = 0.15, score = 0, highScore = 0;
         let pipeX = 400, pipeHeight = 200, gap = 150, state = "MENU";
         const birdImg = new Image(); 
         birdImg.src = "bird.png"; 
@@ -37,7 +37,7 @@
             else if (state === "PLAYING") {
                 velocity += gravity;
                 birdY += velocity;
-                pipeX -= 3;
+                pipeX -= 2;
 
                 if (pipeX < -60) {
                     pipeX = 400;
@@ -82,7 +82,7 @@
                 birdY = 250; velocity = 0; pipeX = 400; score = 0;
                 state = "PLAYING";
             } else {
-                velocity = -10;
+                velocity = -5;
             }
         }
 
